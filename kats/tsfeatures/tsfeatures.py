@@ -484,7 +484,7 @@ class TsFeatures:
         # single features
         dict_stat_features = {}
         if self.statistics:
-            dict_stat_features = self.get_statistics(
+            dict_stat_features = TsFeatures.get_statistics(
                 x,
                 self.statistics_features,
                 extra_args=self.__kwargs__,
