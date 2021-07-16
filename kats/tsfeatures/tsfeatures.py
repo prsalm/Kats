@@ -713,7 +713,6 @@ class TsFeatures:
         result = {}
         for k, v in _statistical_features.items():
             if extra_args.get(k, default_status):
-                print(f'calculating feature {k}')
                 logging.info(f'calculating feature {k}')
                 result[k] = v(x)
         return result
