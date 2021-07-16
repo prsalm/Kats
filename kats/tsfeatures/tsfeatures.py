@@ -664,7 +664,6 @@ class TsFeatures:
         return np.var(v)
 
     @staticmethod
-    @jit(forceobj=True)
     def get_statistics(
         x: np.ndarray,
         extra_args: Optional[Dict[str, bool]] = None,
