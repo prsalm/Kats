@@ -466,6 +466,10 @@ class TsFeatures:
                 x,
                 extra_args=self.__kwargs__,
                 default_status=self.default,
+                spectral_freq=self.spectral_freq,
+                window_size=self.window_size,
+                nbins=self.nbins,
+                lag_size=self.lag_size,
             )
 
         # calculate cusum detector features
@@ -665,6 +669,10 @@ class TsFeatures:
         x: np.ndarray,
         extra_args: Optional[Dict[str, bool]] = None,
         default_status: bool = True,
+        spectral_freq: int = 1,
+        window_size: int = 20,
+        nbins: int = 10,
+        lag_size: int = 30,
     ) -> Dict[str, float]:
         """
         Calculate simple statistical features for a time series.
@@ -688,17 +696,17 @@ class TsFeatures:
             "length": partial(TsFeatures.get_length),
             "mean": partial(TsFeatures.get_mean),
             "var": partial(TsFeatures.get_var),
-            "entropy": partial(TsFeatures.get_spectral_entropy, freq=TsFeatures.spectral_freq),
-            "lumpiness": partial(TsFeatures.get_lumpiness, window_size=TsFeatures.window_size),
-            "stability": partial(TsFeatures.get_stability, window_size=TsFeatures.window_size),
-            "flat_spots": partial(TsFeatures.get_flat_spots, nbins=TsFeatures.nbins),
-            "hurst": partial(TsFeatures.get_hurst, lag_size=TsFeatures.lag_size),
+            "entropy": partial(TsFeatures.get_spectral_entropy, freq=spectral_freq),
+            "lumpiness": partial(TsFeatures.get_lumpiness, window_size=window_size),
+            "stability": partial(TsFeatures.get_stability, window_size=window_size),
+            "flat_spots": partial(TsFeatures.get_flat_spots, nbins=nbins),
+            "hurst": partial(TsFeatures.get_hurst, lag_size=lag_size),
             "std1st_der": partial(TsFeatures.get_std1st_der),
             "crossing_points": partial(TsFeatures.get_crossing_points),
             "binarize_mean": partial(TsFeatures.get_binarize_mean),
             "unitroot_kpss": partial(TsFeatures.get_unitroot_kpss),
             "heterogeneity": partial(TsFeatures.get_het_arch),
-            "histogram_mode": partial(TsFeatures.get_histogram_mode, nbins=TsFeatures.nbins),
+            "histogram_mode": partial(TsFeatures.get_histogram_mode, nbins=nbins),
             "linearity": partial(TsFeatures.get_linearity),
         }
 
