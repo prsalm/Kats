@@ -251,7 +251,7 @@ class TsFeatures:
         self.final_filter = final_filter
 
         self._set_defaults(kwargs, default)
-        self._setup(spectral_freq, window_size, nbins, lag_size)
+        self._statistics_setup(spectral_freq, window_size, nbins, lag_size)
 
     def _compute_f2g(
         self, kwargs: Dict[str, Any], g2f: Dict[str, List[str]]
@@ -336,7 +336,7 @@ class TsFeatures:
         self.__kwargs__ = kwargs
         self.default = default
 
-    def _setup(
+    def _statistics_setup(
         self, spectral_freq: int, window_size: int, nbins: int, lag_size: int
     ) -> None:
         self.statistics_features = {
