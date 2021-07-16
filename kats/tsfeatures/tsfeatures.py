@@ -251,7 +251,6 @@ class TsFeatures:
         self.final_filter = final_filter
 
         self._set_defaults(kwargs, default)
-        self._statistics_setup(spectral_freq, window_size, nbins, lag_size)
 
     def _compute_f2g(
         self, kwargs: Dict[str, Any], g2f: Dict[str, List[str]]
@@ -335,27 +334,6 @@ class TsFeatures:
         # For lower level of the features
         self.__kwargs__ = kwargs
         self.default = default
-
-    def _statistics_setup(
-        self, spectral_freq: int, window_size: int, nbins: int, lag_size: int
-    ) -> None:
-        self.statistics_features = {
-            "length": partial(TsFeatures.get_length),
-            "mean": partial(TsFeatures.get_mean),
-            "var": partial(TsFeatures.get_var),
-            "entropy": partial(TsFeatures.get_spectral_entropy, freq=spectral_freq),
-            "lumpiness": partial(TsFeatures.get_lumpiness, window_size=window_size),
-            "stability": partial(TsFeatures.get_stability, window_size=window_size),
-            "flat_spots": partial(TsFeatures.get_flat_spots, nbins=nbins),
-            "hurst": partial(TsFeatures.get_hurst, lag_size=lag_size),
-            "std1st_der": partial(TsFeatures.get_std1st_der),
-            "crossing_points": partial(TsFeatures.get_crossing_points),
-            "binarize_mean": partial(TsFeatures.get_binarize_mean),
-            "unitroot_kpss": partial(TsFeatures.get_unitroot_kpss),
-            "heterogeneity": partial(TsFeatures.get_het_arch),
-            "histogram_mode": partial(TsFeatures.get_histogram_mode, nbins=nbins),
-            "linearity": partial(TsFeatures.get_linearity),
-        }
 
     def transform(
         self, x: TimeSeriesData
@@ -484,9 +462,8 @@ class TsFeatures:
         # single features
         dict_stat_features = {}
         if self.statistics:
-            dict_stat_features = TsFeatures.get_statistics(
+            dict_stat_features = self.get_statistics(
                 x,
-                self.statistics_features,
                 extra_args=self.__kwargs__,
                 default_status=self.default,
             )
@@ -686,7 +663,6 @@ class TsFeatures:
     @jit(forceobj=True)
     def get_statistics(
         x: np.ndarray,
-        dict_features: Optional[Dict[str, partial]] = None,
         extra_args: Optional[Dict[str, bool]] = None,
         default_status: bool = True,
     ) -> Dict[str, float]:
@@ -707,11 +683,27 @@ class TsFeatures:
         """
         if extra_args is None:
             extra_args = {}
-        if dict_features is None:
-            dict_features = {}
+        
+        _statistical_features = {
+            "length": partial(TsFeatures.get_length),
+            "mean": partial(TsFeatures.get_mean),
+            "var": partial(TsFeatures.get_var),
+            "entropy": partial(TsFeatures.get_spectral_entropy, freq=TsFeatures.spectral_freq),
+            "lumpiness": partial(TsFeatures.get_lumpiness, window_size=TsFeatures.window_size),
+            "stability": partial(TsFeatures.get_stability, window_size=TsFeatures.window_size),
+            "flat_spots": partial(TsFeatures.get_flat_spots, nbins=TsFeatures.nbins),
+            "hurst": partial(TsFeatures.get_hurst, lag_size=TsFeatures.lag_size),
+            "std1st_der": partial(TsFeatures.get_std1st_der),
+            "crossing_points": partial(TsFeatures.get_crossing_points),
+            "binarize_mean": partial(TsFeatures.get_binarize_mean),
+            "unitroot_kpss": partial(TsFeatures.get_unitroot_kpss),
+            "heterogeneity": partial(TsFeatures.get_het_arch),
+            "histogram_mode": partial(TsFeatures.get_histogram_mode, nbins=TsFeatures.nbins),
+            "linearity": partial(TsFeatures.get_linearity),
+        }
 
         result = {}
-        for k, v in dict_features.items():
+        for k, v in _statistical_features.items():
             if extra_args.get(k, default_status):
                 result[k] = v(x)
         return result
