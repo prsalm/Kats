@@ -340,21 +340,21 @@ class TsFeatures:
         self, spectral_freq: int, window_size: int, nbins: int, lag_size: int
     ) -> None:
         self.statistics_features = {
-            "length": partial(self.get_length),
-            "mean": partial(self.get_mean),
-            "var": partial(self.get_var),
-            "entropy": partial(self.get_spectral_entropy, freq=spectral_freq),
-            "lumpiness": partial(self.get_lumpiness, window_size=window_size),
-            "stability": partial(self.get_stability, window_size=window_size),
-            "flat_spots": partial(self.get_flat_spots, nbins=nbins),
-            "hurst": partial(self.get_hurst, lag_size=lag_size),
-            "std1st_der": partial(self.get_std1st_der),
-            "crossing_points": partial(self.get_crossing_points),
-            "binarize_mean": partial(self.get_binarize_mean),
-            "unitroot_kpss": partial(self.get_unitroot_kpss),
-            "heterogeneity": partial(self.get_het_arch),
-            "histogram_mode": partial(self.get_histogram_mode, nbins=nbins),
-            "linearity": partial(self.get_linearity),
+            "length": partial(TsFeatures.get_length),
+            "mean": partial(TsFeatures.get_mean),
+            "var": partial(TsFeatures.get_var),
+            "entropy": partial(TsFeatures.get_spectral_entropy, freq=spectral_freq),
+            "lumpiness": partial(TsFeatures.get_lumpiness, window_size=window_size),
+            "stability": partial(TsFeatures.get_stability, window_size=window_size),
+            "flat_spots": partial(TsFeatures.get_flat_spots, nbins=nbins),
+            "hurst": partial(TsFeatures.get_hurst, lag_size=lag_size),
+            "std1st_der": partial(TsFeatures.get_std1st_der),
+            "crossing_points": partial(TsFeatures.get_crossing_points),
+            "binarize_mean": partial(TsFeatures.get_binarize_mean),
+            "unitroot_kpss": partial(TsFeatures.get_unitroot_kpss),
+            "heterogeneity": partial(TsFeatures.get_het_arch),
+            "histogram_mode": partial(TsFeatures.get_histogram_mode, nbins=nbins),
+            "linearity": partial(TsFeatures.get_linearity),
         }
 
     def transform(
@@ -709,8 +709,6 @@ class TsFeatures:
             extra_args = {}
         if dict_features is None:
             dict_features = {}
-        logging.info(extra_args)
-        logging.info(dict_features)
 
         result = {}
         for k, v in dict_features.items():
