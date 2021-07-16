@@ -709,6 +709,8 @@ class TsFeatures:
             extra_args = {}
         if dict_features is None:
             dict_features = {}
+        logging.info(extra_args)
+        logging.info(dict_features)
 
         result = {}
         for k, v in dict_features.items():
